@@ -32,7 +32,7 @@
   ],
   "staticTabs": [
     {
-      "contentUrl": "https://fcab2a6b.ngrok.io/tab-auth/simple",
+      "contentUrl": "https://create-teams.azurewebsites.net/src/views//tab-auth/simple",
       "entityId": "simpleAuth",
       "name": "Create Team",
       "scopes": [
@@ -66,6 +66,6 @@
     "messageTeamMembers"
   ],
   "validDomains": [
-    "fcab2a6b.ngrok.io"
+    "create-teams.azurewebsites.net"
   ]
 }
