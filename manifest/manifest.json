@@ -25,14 +25,14 @@
   "accentColor": "#0079bf",
   "configurableTabs": [
     {
-      "configurationUrl": "https://fcab2a6b.ngrok.io/tab/tabConfig/index.html",
+      "configurationUrl": "https://create-teams.azurewebsites.net/tab/tabConfig/index.html",
       "canUpdateConfiguration": false,
       "scopes": [ "team", "groupchat" ]
     }
   ],
   "staticTabs": [
     {
-      "contentUrl": "https://create-teams.azurewebsites.net/src/views//tab-auth/simple",
+      "contentUrl": "https://create-teams.azurewebsites.net/tab-auth/simple",
       "entityId": "simpleAuth",
       "name": "Create Team",
       "scopes": [
