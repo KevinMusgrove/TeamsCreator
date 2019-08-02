@@ -60,8 +60,8 @@ app.get("/tab-auth/simple", (req, res) => { res.render("tab-auth/simple"); });
 app.get("/tab-auth/simple-start", (req, res) => { res.render("tab-auth/simple-start"); });
 app.get("/tab-auth/simple-start-v2", (req, res) => { res.render("tab-auth/simple-start-v2"); });
 app.get("/tab-auth/simple-end", (req, res) => { res.render("tab-auth/simple-end"); });
-app.get("/tab-auth/silent", (req, res) => { res.render("tab-auth/silent"); });
-app.get("/tab-auth/silent-start", (req, res) => { res.render("tab-auth/silent-start"); });
+//app.get("/tab-auth/silent", (req, res) => { res.render("tab-auth/silent"); });
+//app.get("/tab-auth/silent-start", (req, res) => { res.render("tab-auth/silent-start"); });
 app.get("/tab-auth/silent-end", (req, res) => { res.render("tab-auth/silent-end"); });
 
 app.get("/", ManifestCreatorStart.getRequestHandler());

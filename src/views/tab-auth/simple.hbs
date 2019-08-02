@@ -1,135 +1,631 @@
-<!--
-// Copyright (c) Microsoft Corporation
-// All rights reserved.
-//
-// MIT License:
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-//
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED ""AS IS"", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
--->
-
 <html>
     <head>
-        <title>Simple Authentication Sample</title>
+        <title>Create Team</title>
+        <style>
+    .button {   
+        text-decoration: none;
+        height: 32px;
+        min-width: 80px;
+        background-color: #5558AF;
+        border-color: #5558AF;
+        color: white;
+        outline: transparent;
+        position: relative;
+        font-family: "Segoe UI WestEuropean","Segoe UI","Helvetica Neue",sans-serif;
+        -webkit-font-smoothing: antialiased;
+        font-size: 13.5px;
+        font-weight: bold;
+        border-width: 0;
+        text-align: center;
+        cursor: pointer;
+        display: inline-block;
+        padding: 0 16px;
+        border-radius:5px;
+    }
+
+    .button:disabled{
+        background-color: lightgray;
+        border-color: lightgray;
+        color: black;
+        cursor: not-allowed;
+    }
+
+    .label {
+        font-weight:bold;
+        font-size: 14px;
+        font-family: "Segoe UI WestEuropean","Segoe UI","Helvetica Neue",sans-serif;
+        height: 32px;
+        line-height: 32px;
+        margin: 0 4px;
+        vertical-align: top;
+        display: inline-block;                
+    }
+
+    .radiolabel{
+        font-weight:500;
+        font-size: 13px;
+        font-family: "Segoe UI WestEuropean","Segoe UI","Helvetica Neue",sans-serif;
+        height: 32px;
+        line-height: 32px;
+        margin: 0 4px;
+        vertical-align: top;
+        display: inline-block;
+        position: relative;
+        bottom: 7px;  
+    }
+
+    .buttons {
+        text-align: right;
+        margin-top: 40px;
+
+    }
+
+    #btnCreate{
+        position: relative;
+        right:5px;
+    }
+
+    .container {
+        margin: auto;
+        width: 50%;        
+        padding: 13px;
+        margin-top: 30px;        
+    }
+
+    .input{
+        display: block;
+        width: 100%;
+        height: calc(1.5em + .75rem + 2px);
+        padding: .375rem .75rem;
+        font-size: 1rem;
+        font-weight: 400;
+        line-height: 1.5;
+        color: #495057;
+        background-color: #fff;
+        background-clip: padding-box;
+        border: 1px solid #ced4da;
+        border-radius: .25rem;    
+    }
+
+    .header{
+        width: 100%;
+        background-color: #464571;
+        height: 40px;
+        color: #fff;
+        font-size: 18px;
+        vertical-align: middle;
+        font-weight: bold;
+        line-height: 40px;        
+        margin-bottom: 25px;
+        border-radius: 8px;
+    }
+
+    #formContainer{
+        border: #464571 5px solid;
+        padding: 13px 13px 17px 13px;
+        margin-top: -36px;
+        border-radius: 8px;
+    }
+
+    #errorSection,#successSection{
+        display: none;        
+        font-family: "Segoe UI WestEuropean","Segoe UI","Helvetica Neue",sans-serif;
+        margin-bottom: 15px;
+        margin-top: 10px;
+    }
+
+    #lblError{
+        color: #721c24;
+        background-color: #f8d7da;
+        border-color: #f5c6cb;
+        position: relative;
+        padding: .75rem 1.25rem;
+        margin-bottom: 1rem;
+        border: 1px solid transparent;
+        border-radius: .25rem;
+    }
+
+    #tbTeamDesc{
+        font-family: "Segoe UI WestEuropean","Segoe UI","Helvetica Neue",sans-serif;        
+        font-size: 1rem;
+        font-weight: 400;
+        line-height: 1.5;
+        color: #495057;
+        background-color: #fff;
+        background-clip: padding-box;
+        border: 1px solid #ced4da;
+        border-radius: .25rem;    
+        max-width: 100%;
+        max-height: 100%;
+        height: 80px;
+        width: 100%;
+    }
+
+    #lblSuccess{
+        color: #155724;
+        background-color: #d4edda;
+        border-color: #c3e6cb;
+        position: relative;
+        padding: .75rem 1.25rem;
+        margin-bottom: 1rem;
+        border: 1px solid transparent;
+        border-radius: .25rem;
+    }         
+
+    .ms-Spinner{        
+        text-align: center;
+        margin: auto;
+        width: 0;
+        margin-top: 15px;
+    }
+
+    .ms-Spinner-label{
+        width:100px; 
+        position: relative !important;        
+        top:2px !important;
+        left:-40px !important;        
+    }
+
+    .ms-Spinner-circle{
+        background-color: #5558AF !important;       
+    }
+                  
+        </style>        
     </head>
-    <body>
-        <p>
-            This sample shows the basics of an authentication/authorization flow in a Microsoft Teams tab.
-        </p>
-        <p>
-            Click on the "Login" button below to login to Azure AD, and grant the sample app access to your profile information.
-            The app will fetch your profile using Microsoft Graph, and display information about you below. 
-        </p>
-
-        <!-- Login button -->
-        <button onclick="login()">Login to Azure AD</button>
-        <button onclick="loginV2()">Login to Azure AD (V2 endpoint)</button>
-
-        <!-- Result -->
-        <p>
-            <div id="divError" style="display: none"></div>
-            <div id="divProfile" style="display: none">
-                <div><b>Name:</b> <span id="profileDisplayName"/></div>
-                <div><b>Job title:</b> <span id="profileJobTitle"/></div>
-                <div><b>E-mail:</b> <span id="profileMail"/></div>
-                <div><b>UPN:</b> <span id="profileUpn"/></div>
-                <div><b>Object id:</b> <span id="profileObjectId"/></div>
+    <body>           
+        <div class="container">            
+            <div class="header">
+                <button style="margin-left:5px;font-size:16px;background-color:#464571;font-weight:bold;margin-top:3px;color:white" class="button" id="btnSignIn" onclick="loginV2()">Sign In</button>
+                {{!-- <span style="float:right;margin-right:15px;font-family:Segoe UI">Create Team</span> --}}
             </div>
-        </p>
-
+            <div id="formContainer">                
+                <div id="errorSection">
+                    <label id="lblError"></label>
+                </div>
+                <div id="successSection">
+                    <label id="lblSuccess"></label>
+                </div>
+                <label class="label">Team Name <span style="color: red">*</span></label><br>
+                <input class="input" type="text" id="tbTeamName"/><br>
+                <label class="label">Team Description</label><br>
+                <textarea class="input" rows="4" cols="50" id="tbTeamDesc"></textarea>
+                <div>
+                    <label class="label">Team Members</label><br/>
+                    <label onclick="rbLabelClick(this)" id="lblEveryone" class="radiolabel">Everyone:</label><input type="radio" name="rbTeamMembers" id="rbEveryone" value="atbAll" checked>
+                    <label onclick="rbLabelClick(this)" id="lblManagement" class="radiolabel">Management:</label><input type="radio" name="rbTeamMembers" id="rbManagement" value="management">
+                </div>
+                <div class="ms-Spinner">
+                    <br/>
+                    <div class="ms-Spinner-label">                                              
+                    </div>                    
+                </div>                  
+                <div class="buttons">
+                    <input type="button" class="button" value="Create" id="btnCreate" title="Please Sign In" onclick="createClick()" disabled/>
+                    <input type="button" class="button" value="Clear" onclick="clearClick()"/>
+                </div>   
+            </div>
+        </div>                              
         <script src="https://code.jquery.com/jquery-3.1.1.js" integrity="sha384-VC7EHu0lDzZyFfmjTPJq+DFyIn8TUGAJbEtpXquazFVr00Q/OOx//RjiZ9yU9+9m" crossorigin="anonymous"></script>
         <script src="https://statics.teams.microsoft.com/sdk/v1.0/js/MicrosoftTeams.min.js" integrity="sha384-SNENyRfvDvybst1u0LawETYF6L5yMx5Ya1dIqWoG4UDTZ/5UAMB15h37ktdBbyFh" crossorigin="anonymous"></script>
+        <script src="https://secure.aadcdn.microsoftonline-p.com/lib/1.0.15/js/adal.min.js" integrity="sha384-lIk8T3uMxKqXQVVfFbiw0K/Nq+kt1P3NtGt/pNexiDby2rKU6xnDY8p16gIwKqgI" crossorigin="anonymous"></script>
 
-        <script type="text/javascript">
-            microsoftTeams.initialize();
+        
+        <link rel="stylesheet" href="https://static2.sharepointonline.com/files/fabric/office-ui-fabric-js/1.4.0/css/fabric.min.css" />
+        <link rel="stylesheet" href="https://static2.sharepointonline.com/files/fabric/office-ui-fabric-js/1.4.0/css/fabric.components.min.css" />
+        <script src="https://static2.sharepointonline.com/files/fabric/office-ui-fabric-js/1.4.0/js/fabric.min.js"></script>
 
-            // Login to Azure AD and get access to Microsoft Graph
-            function login() {
-                hideProfileAndError(); 
 
-                microsoftTeams.authentication.authenticate({
-                    url: window.location.origin + "/tab-auth/simple-start",
-                    width: 600,
-                    height: 535,
-                    successCallback: function (result) {
-                        console.log("Login succeeded: " + result);
-                        getUserProfile(result.accessToken);
-                    },
-                    failureCallback: function (reason) {
-                        console.log("Login failed: " + reason);
-                        handleAuthError(reason);
+        <script type="text/javascript">   
+            var GlobalAccessToken, members = [], owners = [], globalTheme = '';   
+            microsoftTeams.initialize();            
+            microsoftTeams.getContext(function(context){
+                setTheme(context.theme);
+            }); 
+            
+            var setTheme = function(theme){
+                if(theme === "dark")
+                {
+                   globalTheme = 'dark'
+                   var labels = document.getElementsByClassName("label")
+                    for(var i = 0; i < labels.length; i++)
+                    {
+                        labels[i].style.color = "lightgray";
+                    } 
+                    labels = document.getElementsByClassName("radiolabel")
+                    for(var i = 0; i < labels.length; i++)
+                    {
+                        labels[i].style.color = "lightgray";
+                    }                                                          
+                }
+                else
+                {
+                    globalTheme = 'light'
+                    var labels = document.getElementsByClassName("label")
+                    for(var i = 0; i < labels.length; i++)
+                    {
+                        labels[i].style.color = "black";
                     }
-                });
+                    labels = document.getElementsByClassName("radiolabel")
+                    for(var i = 0; i < labels.length; i++)
+                    {
+                        labels[i].style.color = "black";
+                    }
+                }
             }
+            microsoftTeams.registerOnThemeChangeHandler(setTheme);
+    
+            
+            //Silent Authentication
+            //let config = {
+            ///    clientId: "e8b34e95-9215-45a9-af86-b52f976b3d75",
+            //    // redirectUri must be in the list of redirect URLs for the Azure AD app
+            //    redirectUri: window.location.origin + "/tab-auth/silent-end",
+            //    cacheLocation: "localStorage",
+            //    navigateToLoginRequestUrl: false,
+            //};
+
+            //let loginHint = undefined;  
+            //microsoftTeams.getContext(function(context){       
+            //    loginHint = context.upn;     
+                //loadData(loginHint);           
+            //}); 
+            
+
+            //function loadData(loginHint)
+            //{
+            //    if(loginHint)
+            //    {
+            //        config.extraQueryParameter = "scope=openid+profile&login_hint=" + encodeURIComponent(loginHint);
+            //    }
+            //    else
+            //    {
+            //        config.extraQueryParameter = "scope=openid+profile";
+            //   }
+                
+            //    let authContext = new AuthenticationContext(config);
+            //    let user = authContext.getCachedUser();
+            //    debugger;
+            //    if(user.userName !== loginHint){
+            //        authContext.clearCache();
+            //    }
+            //    let token = authContext.getCachedToken(config.clientId);
+            //    if(token){
+            //        GlobalAccessToken = token;
+            //        showProfileInformation(token);
+            //        $("#btnCreate").prop('disabled',false);   
+            //    }
+            //    else{
+            //        authContext._renewIdToken(config.clientId,function(err, idToken){
+            //            debugger;
+            //            if(err){
+            //                var t = err;
+            //                console.log("error callback: " + err)
+            //                debugger;
+            //            }
+            //            else{
+            //                GlobalAccessToken = idToken;
+            //                showProfileInformation(token);
+            //                $("#btnCreate").prop('disabled',false);   
+            //            }
+            //        })
+            //    }
+
+
+
+            //}
+
+
+
+            //function showProfileInformation(idToken) {                
+            //    $.ajax({
+            //        url: window.location.origin + "/api/validateToken",
+            //        beforeSend: function(request) {
+            //            request.setRequestHeader("Authorization", "Bearer " + idToken);
+            //        },
+            //        success: function (token) {
+            //            debugger;
+            //            $("#profileDisplayName").text(token.name);
+            //            $("#profileUpn").text(token.upn);
+            //            $("#profileObjectId").text(token.oid);
+            //            $("#divProfile").css({ display: "" });
+            //            $("#divError").css({ display: "none" });
+            //        },
+            //        error: function (xhr, textStatus, errorThrown) {
+            //            console.log("textStatus: " + textStatus + ", errorThrown:" + errorThrown);
+            //            $("#divError").text(errorThrown).css({ display: "" });
+            //            $("#divProfile").css({ display: "none" });
+            //        },
+            //    });
+            //}
 
             // Login to Azure AD and get access to Microsoft Graph
-            function loginV2() {
-                hideProfileAndError(); 
-
+            function loginV2() {                
                 microsoftTeams.authentication.authenticate({
                     url: window.location.origin + "/tab-auth/simple-start-v2",
                     width: 600,
                     height: 535,
                     successCallback: function (result) {
-                        console.log("Login succeeded: " + result);
-                        getUserProfile(result.accessToken);
+                        GlobalAccessToken = result.accessToken;                                                
+                        $("#btnCreate").prop('disabled',false);   
+                        $("#btnCreate").prop('title','Create Team');                     
                     },
                     failureCallback: function (reason) {
                         console.log("Login failed: " + reason);
-                        handleAuthError(reason);
+                        $("#lblError").text("Error: Login failed: " + reason);
+                        $("#errorSection").slideDown();
+                        $("#btnCreate").prop('disabled',true);
                     }
                 });
             }
 
-            // Get the user's profile information from Microsoft Graph
-            function getUserProfile(accessToken) {
-                $.ajax({
-                    url: "https://graph.microsoft.com/v1.0/me/",
+            //Add form data..
+           async function createClick(){ 
+                var teamName = $("#tbTeamName").val();
+                var teamDesc = $("#tbTeamDesc").val();
+                var rbMembersValue = $("#rbEveryone")["0"].checked;
+                $("#lblError").text("");
+                $("#errorSection").css({display:'none'});
+                $("#lblSuccess").text("");
+                $("#successSection").css({display:'none'});
+                if(teamName && GlobalAccessToken)    
+                {
+                    var SpinnerElements = document.querySelectorAll(".ms-Spinner");
+                    for (var i = 0; i < SpinnerElements.length; i++) {
+                        new fabric['Spinner'](SpinnerElements[i]);
+                    }
+                     $(".ms-Spinner-label").text("Creating Group...");
+                     if(globalTheme == 'dark')
+                     { 
+                        $(".ms-Spinner-label").css({color:'lightgray'});
+                     }
+                     else{                        
+                        $(".ms-Spinner-label").css({color:'#5558AF'});
+                     }     
+                     var ownersResponse = await GetManagementGroup();
+                     var membersResponse;                                   
+                    if(rbMembersValue){
+                        membersResponse = await GetAtbAllGroup();                                
+                    }
+                    else{
+                        membersResponse = ownersResponse;
+                    }                    
+                    members = membersResponse.map(m => "https://graph.microsoft.com/v1.0/users/" + m.id);
+                    owners = ownersResponse.map(o => "https://graph.microsoft.com/v1.0/users/" + o.id);                                                  
+                    var mailNickname = GenerateMailNickname(teamName);                    
+                    var body = {
+                        "description": teamDesc,
+                        "displayName": teamName,
+                        "groupTypes": [
+                            "Unified"
+                        ],
+                        "mailEnabled": true,
+                        "mailNickname": mailNickname,
+                        "securityEnabled": false,
+                        "owners@odata.bind": owners,
+                        "members@odata.bind": members 
+                    }
+                    //Create Azure AD Group                   
+                    $.ajax({
+                        url: "https://graph.microsoft.com/v1.0/groups",
+                        type: 'POST',
+                        headers:{
+                            "Authorization": "Bearer " + GlobalAccessToken,
+                            "Content-type": "application/json"
+                        },                     
+                        data: JSON.stringify(body),
+                        success: function (response) {                          
+                            CreateTeamWithAttempts(response.id,teamName);                            
+                        },
+                        error: function (xhr, textStatus, errorThrown) {
+                            //onError
+                            $("#lblError").text("Error Creating Azure AD Group.");                            
+                            $("#errorSection").slideDown();                           
+                            console.log(xhr.responseText);                                                        
+                        },
+                    });
+                }
+                else{
+                    //missing data.
+                    if(!GlobalAccessToken)
+                        $("#lblError").append("Error: Please Sign In Before Creating Team. ");
+                    if(!teamName)
+                        $("#lblError").append("Team Name is required. ");                                        
+                        $("#errorSection").slideDown();
+                }
+            }
+
+            async function CreateTeamWithAttempts(groupID, teamName)
+            {
+                $(".ms-Spinner-label").text("Creating Team...");
+                let attemptsCount = 0;
+                let teamId = '';
+                let channelId = '';
+                do
+                {                    
+                    teamId = await CreateTeam(groupID);                    
+                    if(teamId)
+                    {
+                        attemptsCount = 3;   
+                        channelId = await CreateChannelWithAttempts(teamId);    
+                        if(!channelId)
+                        {
+                            $("#lblError").text("Error Creating Channel.");
+                            $("#errorSection").slideDown();    
+                        }      
+                        else{
+                            $("#lblSuccess").text("Successfully created team: " + teamName);
+                            $("#successSection").slideDown();
+                            setTimeout(()=>{
+                                $("#successSection").slideUp();
+                            },7000);  
+                        }                                         
+                    }
+                    else{
+                        attemptsCount++;
+                    }
+                }                
+                while(attemptsCount < 3);
+                return teamId;
+            }
+
+            async function CreateChannelWithAttempts(teamId)
+            {
+                $(".ms-Spinner-label").text("Creating Site Images Channel...");
+                let attemptsCount = 0;                
+                let channelId = '';                
+                do
+                {
+                    channelId = await CreateChannel(teamId);
+                    if(channelId){                        
+                        attemptsCount = 3;
+                        $(".ms-Spinner").css({display:'none'});                                                
+                    }
+                    else{
+                        attemptsCount++;
+                    }
+                }
+                while(attemptsCount < 3);
+                return channelId;
+            }
+
+            async function CreateChannel(teamId)
+            {
+                var body = {                                        
+                    "displayName": "Site Images",
+                    "description": "This channel is where images are stored."                                           
+                }
+                return new Promise((resolve) => {
+                setTimeout(() => {
+                    $.ajax({
+                        url: "https://graph.microsoft.com/v1.0/teams/" + teamId + "/channels",                        
+                        type: 'POST',
+                        headers:{
+                            "Authorization": "Bearer " + GlobalAccessToken,
+                            "Content-type": "application/json"
+                        },                     
+                        data: JSON.stringify(body),
+                        success: function (response) {                  
+                            resolve(response.id);                            
+                        },
+                        error: function (xhr, textStatus, errorThrown) {
+                            //onError
+                            $("#lblError").text("Error Creating Channel.");
+                            $("#errorSection").slideDown();                            
+                            console.log(xhr.responseText);   
+                            resolve('');
+                        },
+                    }); 
+                }, 10000);
+                });                
+            }
+
+
+            async function CreateTeam(groupId){
+                var body = {
+                    "memberSettings": {
+                        "allowCreateUpdateChannels": true
+                    },
+                    "messagingSettings": {
+                        "allowUserEditMessages": true,
+                        "allowUserDeleteMessages": true
+                    },
+                    "funSettings": {
+                        "allowGiphy": true,
+                        "giphyContentRating": "strict"
+                    }                    
+                }
+                return new Promise((resolve) => {
+                setTimeout(() => {
+                    $.ajax({
+                        url: "https://graph.microsoft.com/v1.0/groups/" + groupId + "/team",                        
+                        type: 'PUT',
+                        headers:{
+                            "Authorization": "Bearer " + GlobalAccessToken,
+                            "Content-type": "application/json"
+                        },                     
+                        data: JSON.stringify(body),
+                        success: function (response) {                  
+                            resolve(response.id);
+                        },
+                        error: function (xhr, textStatus, errorThrown) {
+                            //onError
+                            $("#lblError").text("Error Creating Team.");
+                            $("#errorSection").slideDown();                            
+                            console.log(xhr.responseText);   
+                            resolve('');
+                        },
+                    }); 
+                }, 10000);
+                });   
+            }
+
+            async function GetManagementGroup(){
+                let result;
+                try{
+                    result = await $.ajax({
+                    url: "https://graph.microsoft.com/v1.0/groups/cecac2e4-41f6-4f5e-abd7-1b72f5d49625/members",
                     beforeSend: function(request) {
-                        request.setRequestHeader("Authorization", "Bearer " + accessToken);
-                    },
-                    success: function (profile) {
-                        $("#profileDisplayName").text(profile.displayName);
-                        $("#profileJobTitle").text(profile.jobTitle);
-                        $("#profileMail").text(profile.mail);
-                        $("#profileUpn").text(profile.userPrincipalName);
-                        $("#profileObjectId").text(profile.id);
-                        $("#divProfile").css({ display: "" });
-                        $("#divError").css({ display: "none" });
-                    },
-                    error: function (xhr, textStatus, errorThrown) {
-                        console.log("textStatus: " + textStatus + ", errorThrown:" + errorThrown);
-                        $("#divError").text(errorThrown).css({ display: "" });
-                        $("#divProfile").css({ display: "none" });
-                    },
+                        request.setRequestHeader("Authorization", "Bearer " + GlobalAccessToken);
+                    }
                 });
+                    return result.value;
+                }
+                catch(error){
+                    $("#lblError").text("Error Getting Owners.");
+                    $("#errorSection").slideDown();          
+                }
             }
 
-            // Show error information
-            function handleAuthError(reason) {
-                $("#divError").text(reason).css({ display: "" });
-                $("#divProfile").css({ display: "none" });
+           async function GetAtbAllGroup(){
+               let result;
+               try{
+                    result = await $.ajax({
+                        url: "https://graph.microsoft.com/v1.0/groups/c2b1554f-157a-402f-9ca5-45a69de5f395/members",
+                        beforeSend: function(request) {
+                            request.setRequestHeader("Authorization", "Bearer " + GlobalAccessToken);
+                        }
+                });
+                return result.value;
+               }
+               catch(error)
+               {
+                    $("#lblError").text("Error Getting Members.");
+                    $("#errorSection").slideDown();
+               }                
             }
 
-            // Clear all information in tab
-            function hideProfileAndError() {
-                $("#divError").text("").css({ display: "none" });
-                $("#divProfile").css({ display: "none" });
+            function clearClick(){
+                $("#tbTeamName").val("");
+                $("#tbTeamDesc").val("");
+                $("#lblError").text("");
+                $("#errorSection").css({display:'none'});
+                $("#lblSuccess").text("");
+                $("#successSection").css({display:'none'});
+            }
+
+            function GenerateMailNickname(teamName){
+                try
+                {
+                    var mailName = teamName.toLowerCase().replace(/\s/gmi, '-');
+                    return mailName;
+                }
+                catch(error)
+                {
+                    $("#lblError").text("Error Creating Mail Nickname.");
+                    $("#errorSection").slideDown();
+                }
+            }
+
+            function rbLabelClick(lbl){
+                var lblID = lbl.id;
+                if(lblID == "lblEveryone")
+                {
+                    $("#rbEveryone").prop('checked',true);
+                }
+                else
+                {
+                    $("#rbManagement").prop('checked',true);
+                }                
             }
         </script>
     </body>

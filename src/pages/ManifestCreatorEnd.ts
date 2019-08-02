@@ -24,7 +24,7 @@ export class ManifestCreatorEnd {
                                         if (!err4) {
                                             let zip = new Zip;
                                             zip.file("manifest.json", data);
-                                            zip.file("bot_blue.png", data2);
+                                            zip.file("atb_png_small.png", data2);
                                             let options = {base64: false, compression: "DEFLATE"};
                                             let zippedData = zip.generate(options);
                                             fs.writeFile("../../manifest/createdManifest/createdManifest.zip", zippedData, "binary", (err5) => {
